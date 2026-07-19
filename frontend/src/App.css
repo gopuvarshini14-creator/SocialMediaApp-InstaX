@@ -1,0 +1,59 @@
+/* Twitter-Style App Layout */
+.app {
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.app-container {
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* Main Content Area (takes remaining space) */
+.main-content {
+    flex: 1;
+    min-height: 100vh;
+    border-left: 1px solid var(--border-light);
+    border-right: 1px solid var(--border-light);
+    max-width: 600px;
+    margin-left: 275px; /* Width of sidebar */
+    margin-top: 53px;   /* Height of top header */
+}
+
+/* For pages without sidebar (auth pages) */
+.main-content.full-width {
+    margin-left: 0;
+    margin-top: 0;
+    max-width: 100%;
+    border: none;
+}
+
+/* Page Content Wrapper */
+.page-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 53px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 88px; /* Collapsed sidebar width */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        max-width: 100%;
+        border-left: none;
+        border-right: none;
+        padding-bottom: 60px; /* Space for bottom nav */
+        margin-top: 53px;     /* Top header height */
+    }
+
+    .app-container {
+        flex-direction: column;
+    }
+}

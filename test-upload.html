@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Test</title>
+</head>
+<body>
+    <h1>Simple Upload Test</h1>
+    <form id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*,video/*" required>
+        <br><br>
+        <input type="text" id="caption" placeholder="Caption (optional)">
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const caption = document.getElementById('caption').value;
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+
+            console.log('File:', file);
+            console.log('Size:', file.size, 'bytes');
+            console.log('Type:', file.type);
+
+            const formData = new FormData();
+            formData.append('media', file);
+            formData.append('caption', caption);
+
+            result.innerHTML = 'Uploading...';
+
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login first at http://localhost:5173');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                console.log('Response:', data);
+
+                if (response.ok) {
+                    result.innerHTML = `<p style="color: green">Success! Post ID: ${data.id}</p>`;
+                    result.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p style="color: red">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                result.innerHTML = `<p style="color: red">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
